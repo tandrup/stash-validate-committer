@@ -28,4 +28,7 @@
   <repository-hook name="Validate Committer Hook" i18n-name-key="validate-committer-hook.name" key="validate-committer-hook" class="org.tandrup.stash.hooks.validatecommitter.ValidateCommitterHook">
     <description key="validate-committer-hook.description">The Validate Committer Hook Plugin</description>
   </repository-hook>
+  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.PushedByPanel">
+      
+  </web-panel>
 </atlassian-plugin>
