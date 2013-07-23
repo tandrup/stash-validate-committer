@@ -4,7 +4,11 @@
  */
 package org.tandrup.stash.hooks.validatecommitter;
 
+import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.web.model.WebPanel;
+import com.atlassian.stash.content.Changeset;
+import com.atlassian.stash.user.Person;
+import com.atlassian.stash.user.StashAuthenticationContext;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
@@ -14,17 +18,28 @@ import java.util.Map;
  * @author mtandrup
  */
 public class PushedByPanel implements WebPanel {
+    private final StashAuthenticationContext stashAuthenticationContext;
+    private final ActiveObjects ao;
 
+    public PushedByPanel(StashAuthenticationContext stashAuthenticationContext, ActiveObjects ao) {
+        this.stashAuthenticationContext = stashAuthenticationContext;
+        this.ao = ao;
+    }
+    
     @Override
     public String getHtml(Map<String, Object> map) {
-        StringBuilder result = new StringBuilder();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            result.append(entry.getKey());
-            result.append(" = ");
-            result.append(entry.getValue());
-            result.append("<br/>");
+        Changeset changeset = (Changeset) map.get("changeset");
+        PushedBy pushedBy = ao.get(PushedBy.class, changeset.getId());
+        if (pushedBy != null && pushedBy.getEmailAddress() != null) {
+            Person author = changeset.getAuthor();
+            if (!pushedBy.getEmailAddress().equalsIgnoreCase(author.getEmailAddress())) {
+                return "<dl>"
+                        + "<span class=\"aui-icon aui-icon-warning\">Warning</span>"
+                        + "Pushed by " + pushedBy.getEmailAddress() + ".<br/>But committer is " + author.getEmailAddress() + "."
+                        + "</dl>";
+            }
         }
-        return result.toString();
+        return "";
     }
 
     @Override

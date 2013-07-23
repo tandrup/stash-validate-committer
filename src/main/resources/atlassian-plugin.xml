@@ -25,10 +25,16 @@
   <!-- import from the product container -->
   <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
   <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm"/>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects" />
+  
+  <ao key="ao-module">
+    <description>Active Objects used for storing the user that pushed the commit</description>
+    <entity>org.tandrup.stash.hooks.validatecommitter.PushedBy</entity>
+  </ao>
+
   <repository-hook name="Validate Committer Hook" i18n-name-key="validate-committer-hook.name" key="validate-committer-hook" class="org.tandrup.stash.hooks.validatecommitter.ValidateCommitterHook">
     <description key="validate-committer-hook.description">The Validate Committer Hook Plugin</description>
   </repository-hook>
-  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.PushedByPanel">
-      
-  </web-panel>
+
+  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.PushedByPanel" />
 </atlassian-plugin>

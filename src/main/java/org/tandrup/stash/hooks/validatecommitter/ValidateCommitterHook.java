@@ -1,5 +1,6 @@
 package org.tandrup.stash.hooks.validatecommitter;
 
+import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.stash.content.Changeset;
 import com.atlassian.stash.history.HistoryService;
 import com.atlassian.stash.hook.*;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ValidateCommitterHook implements PreReceiveRepositoryHook
 {
@@ -31,16 +33,19 @@ public class ValidateCommitterHook implements PreReceiveRepositoryHook
     private final StashAuthenticationContext stashAuthenticationContext;
     private final HistoryService historyService;
     private final GitScm gitScm;
+    private final ActiveObjects ao;
 
-    public ValidateCommitterHook(StashAuthenticationContext stashAuthenticationContext, HistoryService historyService, GitScm gitScm) {
+    public ValidateCommitterHook(StashAuthenticationContext stashAuthenticationContext, HistoryService historyService, GitScm gitScm, ActiveObjects ao) {
         this.stashAuthenticationContext = stashAuthenticationContext;
         this.historyService = historyService;
         this.gitScm = gitScm;
+        this.ao = ao;
     }
 
     @Override
     public boolean onReceive(RepositoryHookContext context, Collection<RefChange> refChanges, HookResponse response) {
-      final Map<String, Person> rejectedRefs = new HashMap<String, Person>();
+        
+        final Map<String, Person> rejectedRefs = new HashMap<String, Person>();
         final StashUser currentUser = stashAuthenticationContext.getCurrentUser();
         final List<String> pushedRefs = getRefsPushed(refChanges);
         if (!pushedRefs.isEmpty()) {
@@ -48,6 +53,7 @@ public class ValidateCommitterHook implements PreReceiveRepositoryHook
             final List<String> brandNewRevs = revList(context.getRepository(), pushedRefs, ignoreRefs);
             for (String refId : brandNewRevs) {
                 final Changeset changeset = historyService.getChangeset(context.getRepository(), refId);
+                recordPushedBy(changeset, currentUser);
                 final Person author = changeset.getAuthor();
                 if (!validateCommitter(context.getSettings(), author, currentUser)) {
                     rejectedRefs.put(refId, author);
@@ -64,8 +70,18 @@ public class ValidateCommitterHook implements PreReceiveRepositoryHook
             response.err().println("Check your git settings.");
             response.err().println("============================");
         }
-        
+
         return true;
+    }
+    
+    private void recordPushedBy(Changeset changeset, StashUser currentUser) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put(PushedBy.CHANGESET_ID, changeset.getId());
+        params.put(PushedBy.NAME, currentUser.getName());
+        params.put(PushedBy.DISPLAY_NAME, currentUser.getDisplayName());
+        params.put(PushedBy.EMAIL_ADDRESS, currentUser.getEmailAddress());
+        PushedBy pushedBy = ao.create(PushedBy.class, params);
+        System.out.println("Created pushed by: " + pushedBy.getChangesetId());
     }
     
     private List<String> getRefsPushed(final Collection<RefChange> refChanges) {
