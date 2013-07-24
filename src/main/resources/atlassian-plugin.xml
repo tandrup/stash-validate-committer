@@ -37,4 +37,10 @@
   </repository-hook>
 
   <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.ChangesetPanel" />
+
+  <web-section key="commit-list-pushed-by-col" name="Commit List Pushed by Column" weight="500" location="stash.commits.extras">
+    <label key="stash.web.repository.commits.col.pushedby">Pushed by</label>
+  </web-section>
+
+  <web-panel key="pushed-by-panel-commitlist" location="commit-list-pushed-by-col" class="org.tandrup.stash.hooks.validatecommitter.CommitListPanel" />
 </atlassian-plugin>
