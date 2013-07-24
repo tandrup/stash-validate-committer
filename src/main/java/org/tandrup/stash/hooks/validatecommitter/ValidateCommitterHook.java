@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,8 +81,8 @@ public class ValidateCommitterHook implements PreReceiveRepositoryHook
         params.put(PushedBy.NAME, currentUser.getName());
         params.put(PushedBy.DISPLAY_NAME, currentUser.getDisplayName());
         params.put(PushedBy.EMAIL_ADDRESS, currentUser.getEmailAddress());
+        params.put(PushedBy.DATE, new Date());
         PushedBy pushedBy = ao.create(PushedBy.class, params);
-        System.out.println("Created pushed by: " + pushedBy.getChangesetId());
     }
     
     private List<String> getRefsPushed(final Collection<RefChange> refChanges) {

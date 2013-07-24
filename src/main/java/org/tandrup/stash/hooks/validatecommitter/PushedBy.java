@@ -4,6 +4,7 @@
  */
 package org.tandrup.stash.hooks.validatecommitter;
 
+import java.util.Date;
 import net.java.ao.Preload;
 import net.java.ao.Accessor;
 import net.java.ao.RawEntity;
@@ -25,6 +26,7 @@ public interface PushedBy extends RawEntity<String> {
     static final String NAME = "NAME";
     static final String DISPLAY_NAME = "DISPLAY_NAME";
     static final String EMAIL_ADDRESS = "EMAIL_ADDRESS";
+    static final String DATE = "DATE";
 
     @PrimaryKey(CHANGESET_ID)
     @StringLength(40)
@@ -39,4 +41,7 @@ public interface PushedBy extends RawEntity<String> {
 
     @Accessor(EMAIL_ADDRESS)
     String getEmailAddress();
+
+    @Accessor(DATE)
+    Date getDate();
 }
