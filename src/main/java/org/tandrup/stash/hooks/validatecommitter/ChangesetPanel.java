@@ -17,11 +17,11 @@ import java.util.Map;
  *
  * @author mtandrup
  */
-public class PushedByPanel implements WebPanel {
+public class ChangesetPanel implements WebPanel {
     private final StashAuthenticationContext stashAuthenticationContext;
     private final ActiveObjects ao;
 
-    public PushedByPanel(StashAuthenticationContext stashAuthenticationContext, ActiveObjects ao) {
+    public ChangesetPanel(StashAuthenticationContext stashAuthenticationContext, ActiveObjects ao) {
         this.stashAuthenticationContext = stashAuthenticationContext;
         this.ao = ao;
     }

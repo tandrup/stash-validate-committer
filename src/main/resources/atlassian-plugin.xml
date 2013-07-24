@@ -36,5 +36,5 @@
     <description key="validate-committer-hook.description">The Validate Committer Hook Plugin</description>
   </repository-hook>
 
-  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.PushedByPanel" />
+  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.ChangesetPanel" />
 </atlassian-plugin>
