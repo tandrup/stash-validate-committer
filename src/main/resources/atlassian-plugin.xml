@@ -22,25 +22,29 @@
   <component key="myPluginComponent" class="org.tandrup.stash.hooks.committer.MyPluginComponentImpl" public="true">
     <interface>org.tandrup.stash.hooks.committer.MyPluginComponent</interface>
   </component>
+  <component key="refChangeHelper" class="org.tandrup.stash.hooks.validatecommitter.RefChangeHelper" />
   <!-- import from the product container -->
   <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
   <component-import key="gitScm" interface="com.atlassian.stash.scm.git.GitScm"/>
-  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects" />
-  
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
   <ao key="ao-module">
     <description>Active Objects used for storing the user that pushed the commit</description>
     <entity>org.tandrup.stash.hooks.validatecommitter.PushedBy</entity>
   </ao>
-
   <repository-hook name="Validate Committer Hook" i18n-name-key="validate-committer-hook.name" key="validate-committer-hook" class="org.tandrup.stash.hooks.validatecommitter.ValidateCommitterHook">
     <description key="validate-committer-hook.description">The Validate Committer Hook Plugin</description>
   </repository-hook>
-
-  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.ChangesetPanel" />
-
+  <web-panel key="pushed-by-panel" location="stash.changeset.extras" class="org.tandrup.stash.hooks.validatecommitter.ChangesetPanel"/>
   <web-section key="commit-list-pushed-by-col" name="Commit List Pushed by Column" weight="500" location="stash.commits.extras">
     <label key="stash.web.repository.commits.col.pushedby">Pushed by</label>
   </web-section>
-
-  <web-panel key="pushed-by-panel-commitlist" location="commit-list-pushed-by-col" class="org.tandrup.stash.hooks.validatecommitter.CommitListPanel" />
+  <web-panel key="pushed-by-panel-commitlist" location="commit-list-pushed-by-col" class="org.tandrup.stash.hooks.validatecommitter.CommitListPanel"/>
+  <repository-hook name="Log Pushed By Hook" i18n-name-key="log-pushed-by-hook.name" key="log-pushed-by-hook" class="org.tandrup.stash.hooks.validatecommitter.LogPushedByHook">
+    <description key="log-pushed-by-hook.description">The Log Pushed By Hook Plugin</description>
+    <icon>icon-example.png</icon>
+    <config-form name="Log Pushed By Hook Config" key="log-pushed-by-hook-config">
+      <view>org.tandrup.stash.hooks.validatecommitter.logpushedbyhook.view</view>
+      <directory location="/static/"/>
+    </config-form>
+  </repository-hook>
 </atlassian-plugin>
